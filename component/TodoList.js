@@ -8,6 +8,7 @@ export default function TodoList({ todosData }) {
       data={todosData}
       renderItem={({ item }) => <Todo {...item} />}
       keyExtractor={(item) => item.id.toString()}
+      scrollEnabled={false}
     />
   );
 }

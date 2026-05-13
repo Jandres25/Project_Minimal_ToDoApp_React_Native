@@ -64,20 +64,26 @@ export default function AddTodo() {
   }
 
   const scheduleTodoNotification = async (todo) => {
-    const trigger = new Date(todo.hour);
+    const triggerDate = new Date(todo.hour);
+    if (triggerDate <= new Date()) {
+      alert("The alert time has already passed. Please select a future time.");
+      return;
+    }
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "It's time! You have a task to do!!!",
           body: todo.text,
         },
-        trigger,
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DATE,
+          date: triggerDate,
+        },
       });
       console.log("Notification was scheduled");
     } catch (e) {
-      alert(
-        "The notification failed to schedule, make sure the hour is valid."
-      );
+      console.log(e);
+      alert("The notification failed to schedule, make sure the hour is valid.");
     }
   };
 

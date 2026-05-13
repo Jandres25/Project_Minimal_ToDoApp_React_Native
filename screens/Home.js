@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Platform,
   ScrollView,
   StatusBar,
 } from "react-native";
@@ -16,12 +15,12 @@ import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { hideCompletedReducer, setTodosReducer } from "../redux/todosSlice";
 import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
 import moment from "moment";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
@@ -31,14 +30,27 @@ export default function Home() {
   useGetTodos();
   const todos = useSelector((state) => state.todos.todos);
   const [isHidden, setIsHidden] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState("");
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    registerForPushNotificationAsync().then((token) => setExpoPushToken(token));
+    requestNotificationPermissions();
     checkFirstLaunch();
   }, []);
+
+  const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== "granted") {
+      await Notifications.requestPermissionsAsync();
+    }
+    if (Notifications.setNotificationChannelAsync) {
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+      });
+    }
+  };
 
   const checkFirstLaunch = async () => {
     const firstLaunch = await AsyncStorage.getItem("@FirstLaunch");
@@ -64,36 +76,6 @@ export default function Home() {
     setIsHidden(!isHidden);
     dispatch(hideCompletedReducer());
     // setLocalData(localData.filter(item => item.isCompleted === false));
-  };
-
-  const registerForPushNotificationAsync = async () => {
-    let token;
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!!!");
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      return;
-    }
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
-    }
-    return token;
   };
 
   const todayTodos = todos.filter((todo) =>

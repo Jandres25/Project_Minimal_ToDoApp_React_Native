@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Home from "./screens/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -28,31 +29,33 @@ function HomeScreen() {
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Add"
-            component={AddTodo}
-            options={{
-              presentation: "modal",
-              headerTitle: "Task",
-            }}
-          />
-          <Stack.Screen
-            name="Onboarding"
-            component={Onboarding}
-            options={{
-              headerShown: false,
-              presentation: "modal",
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Add"
+              component={AddTodo}
+              options={{
+                presentation: "modal",
+                headerTitle: "Task",
+              }}
+            />
+            <Stack.Screen
+              name="Onboarding"
+              component={Onboarding}
+              options={{
+                headerShown: false,
+                presentation: "modal",
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
     </Provider>
   );
 }
