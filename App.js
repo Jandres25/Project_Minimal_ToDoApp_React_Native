@@ -22,7 +22,7 @@ function HomeScreen() {
         style={styles.button}
         onPress={() => navigation.navigate("Add")}
       >
-        <Text style={styles.plus}>+</Text>
+        <Text style={styles.plus} adjustsFontSizeToFit>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -68,13 +68,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7F8FA",
   },
   button: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: "#000",
     position: "absolute",
-    bottom: 50,
-    right: 15,
+    bottom: 40,
+    right: 20,
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -85,10 +87,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   plus: {
-    fontSize: 40,
+    fontSize: 32,
     color: "#fff",
-    position: "absolute",
-    top: -8,
-    left: 10,
+    lineHeight: 36,
   },
 });

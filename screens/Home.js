@@ -52,12 +52,16 @@ export default function Home() {
   };
 
   const checkFirstLaunch = async () => {
-    const firstLaunch = await AsyncStorage.getItem("@FirstLaunch");
-    if (firstLaunch) {
-      return;
+    try {
+      const firstLaunch = await AsyncStorage.getItem("@FirstLaunch");
+      if (firstLaunch) {
+        return;
+      }
+      await AsyncStorage.setItem("@FirstLaunch", "true");
+      navigation.navigate("Onboarding");
+    } catch (e) {
+      console.log(e);
     }
-    await AsyncStorage.setItem("@FirstLaunch", "true");
-    navigation.navigate("Onboarding");
   };
 
   const handleHideCompleted = () => {
@@ -100,7 +104,7 @@ export default function Home() {
           }}
         >
           <Image
-            source={require("../assets/nothingTomorrow.png")}
+            source={require("../assets/nothingToday.png")}
             style={{
               width: 150,
               height: 150,
@@ -129,7 +133,7 @@ export default function Home() {
           }}
         >
           <Image
-            source={require("../assets/nothingToday.png")}
+            source={require("../assets/nothingTomorrow.png")}
             style={{
               width: 150,
               height: 150,

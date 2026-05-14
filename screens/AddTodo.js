@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +33,15 @@ export default function AddTodo() {
   const addTodo = async () => {
     if (!name.trim()) {
       alert("Please enter a task name.");
+      return;
+    }
+    if (!timeSelected) {
+      alert("Please select a time for the task.");
+      return;
+    }
+    const taskDate = isToday ? date : new Date(date.getTime() + 24 * 60 * 60 * 1000);
+    if (isToday && taskDate <= new Date()) {
+      alert("The selected time has already passed. Please pick a future time.");
       return;
     }
     const newTodo = {
@@ -107,11 +117,11 @@ export default function AddTodo() {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Add Task</Text>
         <View style={[styles.inputContainer, { alignItems: "center" }]}>
@@ -204,7 +214,8 @@ export default function AddTodo() {
           <Text style={{ color: "white" }}>Done</Text>
         </TouchableOpacity>
       </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
