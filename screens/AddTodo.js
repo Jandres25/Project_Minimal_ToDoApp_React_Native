@@ -30,24 +30,27 @@ export default function AddTodo() {
 
   const addTodo = async () => {
     const newTodo = {
-      id: Math.floor(Math.random() * 1000000),
+      id: Date.now().toString(),
       text: name,
       hour: isToday
         ? date.toISOString()
-        : new Date(date).getTime() + 24 * 60 * 60 * 1000,
+        : new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString(),
       isToday: isToday,
       isCompleted: false,
     };
     try {
+      let todoToSave = newTodo;
+      if (withAlert) {
+        const notificationId = await scheduleTodoNotification(newTodo);
+        if (notificationId) {
+          todoToSave = { ...newTodo, notificationId };
+        }
+      }
       await AsyncStorage.setItem(
         "Todos",
-        JSON.stringify([...listTodos, newTodo])
+        JSON.stringify([...listTodos, todoToSave])
       );
-      dispatch(addTodoReducer(newTodo));
-      console.log("Todo created correctly");
-      if (withAlert) {
-        await scheduleTodoNotification(newTodo);
-      }
+      dispatch(addTodoReducer(todoToSave));
       navigation.goBack();
     } catch (e) {
       console.log(e);
@@ -70,7 +73,7 @@ export default function AddTodo() {
       return;
     }
     try {
-      await Notifications.scheduleNotificationAsync({
+      const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
           title: "It's time! You have a task to do!!!",
           body: todo.text,
@@ -80,10 +83,11 @@ export default function AddTodo() {
           date: triggerDate,
         },
       });
-      console.log("Notification was scheduled");
+      return notificationId;
     } catch (e) {
       console.log(e);
       alert("The notification failed to schedule, make sure the hour is valid.");
+      return null;
     }
   };
 

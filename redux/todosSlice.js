@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   todos: [],
+  hideCompleted: false,
 };
 
 export const todosSlice = createSlice({
@@ -10,21 +11,18 @@ export const todosSlice = createSlice({
   reducers: {
     setTodosReducer: (state, action) => {
       state.todos = action.payload;
-      console.log(state.todos);
     },
     addTodoReducer: (state, action) => {
       state.todos.push(action.payload);
     },
     hideCompletedReducer: (state) => {
-      state.todos = state.todos.filter((todo) => !todo.isCompleted);
+      state.hideCompleted = !state.hideCompleted;
     },
     updateTodoReducer: (state, action) => {
-      state.todos = state.todos.map((todo) => {
-        if (todo.id === action.payload.id) {
-          todo.isCompleted = !todo.isCompleted;
-        }
-        return todo;
-      });
+      const todo = state.todos.find((t) => t.id === action.payload);
+      if (todo) {
+        todo.isCompleted = !todo.isCompleted;
+      }
     },
     deleteTodoReducer: (state, action) => {
       const id = action.payload;

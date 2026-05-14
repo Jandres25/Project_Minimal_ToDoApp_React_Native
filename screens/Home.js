@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,7 @@ import TodoList from "../component/TodoList";
 import { useGetTodos } from "../hooks/useGetTodos";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { hideCompletedReducer, setTodosReducer } from "../redux/todosSlice";
+import { hideCompletedReducer } from "../redux/todosSlice";
 import * as Notifications from "expo-notifications";
 import moment from "moment";
 
@@ -29,7 +28,7 @@ Notifications.setNotificationHandler({
 export default function Home() {
   useGetTodos();
   const todos = useSelector((state) => state.todos.todos);
-  const [isHidden, setIsHidden] = useState(false);
+  const hideCompleted = useSelector((state) => state.todos.hideCompleted);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -61,28 +60,16 @@ export default function Home() {
     navigation.navigate("Onboarding");
   };
 
-  const handleHideCompleted = async () => {
-    if (isHidden) {
-      setIsHidden(false);
-      const todos = await AsyncStorage.getItem("Todos");
-      if (todos !== null) {
-        dispatch(setTodosReducer(JSON.parse(todos)));
-      }
-      // setLocalData(todosData.sort((a, b) => {
-      //     return a.isCompleted - b.isCompleted;
-      // }));
-      return;
-    }
-    setIsHidden(!isHidden);
+  const handleHideCompleted = () => {
     dispatch(hideCompletedReducer());
-    // setLocalData(localData.filter(item => item.isCompleted === false));
   };
 
-  const todayTodos = todos.filter((todo) =>
+  const visibleTodos = hideCompleted ? todos.filter((t) => !t.isCompleted) : todos;
+  const todayTodos = visibleTodos.filter((todo) =>
     moment(todo.hour).isSame(moment(), "day")
   );
-  const tomorrowTodos = todos.filter((todo) =>
-    moment(todo.hour).isAfter(moment(), "day")
+  const tomorrowTodos = visibleTodos.filter((todo) =>
+    moment(todo.hour).isSame(moment().add(1, "day"), "day")
   );
 
   return todos.length > 0 ? (
@@ -100,7 +87,7 @@ export default function Home() {
         <Text style={styles.title}>Today</Text>
         <TouchableOpacity onPress={handleHideCompleted}>
           <Text style={{ color: "#3478F6" }}>
-            {isHidden ? "Show Completed" : "Hide Completed"}
+            {hideCompleted ? "Show Completed" : "Hide Completed"}
           </Text>
         </TouchableOpacity>
       </View>

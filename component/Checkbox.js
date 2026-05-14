@@ -5,25 +5,17 @@ import { updateTodoReducer } from "../redux/todosSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Checkbox({ id, text, isCompleted, isToday, hour }) {
+export default function Checkbox({ id, isCompleted, isToday }) {
   const dispatch = useDispatch();
   const listTodos = useSelector((state) => state.todos.todos);
 
-  const handleCheckbox = () => {
+  const handleCheckbox = async () => {
     try {
-      dispatch(updateTodoReducer({ id, isCompleted }));
-      AsyncStorage.setItem(
-        "Todos",
-        JSON.stringify(
-          listTodos.map((todo) => {
-            if (todo.id === id) {
-              return { ...todo, isCompleted: !todo.isCompleted };
-            }
-            return todo;
-          })
-        )
+      const updatedTodos = listTodos.map((todo) =>
+        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
       );
-      console.log("Todo saved correctly");
+      await AsyncStorage.setItem("Todos", JSON.stringify(updatedTodos));
+      dispatch(updateTodoReducer(id));
     } catch (e) {
       console.log(e);
     }

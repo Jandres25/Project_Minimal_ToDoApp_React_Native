@@ -12,20 +12,13 @@ export const useGetTodos = () => {
       try {
         const todos = await AsyncStorage.getItem("Todos");
         if (todos !== null) {
-          // delete todos that they date is less than today
           const todosData = JSON.parse(todos);
-          const todosDataFiltered = todosData.filter((item) => {
-            return moment(item.hour).isSameOrAfter(moment(), "day");
-          });
-          console.log(todosDataFiltered);
-          if (todosDataFiltered !== null) {
-            await AsyncStorage.setItem(
-              "Todos",
-              JSON.stringify(todosDataFiltered)
-            );
-            console.log("we deleted some passed todos");
-            dispatch(setTodosReducer(todosDataFiltered));
-          }
+          // Remove todos whose date has already passed
+          const todosDataFiltered = todosData.filter((item) =>
+            moment(item.hour).isSameOrAfter(moment(), "day")
+          );
+          await AsyncStorage.setItem("Todos", JSON.stringify(todosDataFiltered));
+          dispatch(setTodosReducer(todosDataFiltered));
         }
       } catch (e) {
         console.log(e);

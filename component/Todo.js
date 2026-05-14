@@ -6,23 +6,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodoReducer } from "../redux/todosSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 
-export default function Todo({ id, text, isCompleted, isToday, hour }) {
-  const [thisTodoIsToday, setThisTodoIsToday] = hour
-    ? React.useState(moment(hour).isSame(moment(), "day"))
-    : React.useState(false);
-  const [localHour, setLocalHour] = React.useState(new Date(hour));
+export default function Todo({ id, text, isCompleted, hour, notificationId }) {
+  const thisTodoIsToday = hour ? moment(hour).isSame(moment(), "day") : false;
   const todos = useSelector((state) => state.todos.todos);
   const dispatch = useDispatch();
 
   const handleDeletedTodo = async () => {
-    dispatch(deleteTodoReducer(id));
     try {
+      if (notificationId) {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+      }
       await AsyncStorage.setItem(
         "Todos",
         JSON.stringify(todos.filter((todo) => todo.id !== id))
       );
-      console.log("Todo deleted correctly");
+      dispatch(deleteTodoReducer(id));
     } catch (e) {
       console.log(e);
     }
@@ -43,9 +43,9 @@ export default function Todo({ id, text, isCompleted, isToday, hour }) {
             style={
               isCompleted
                 ? [
-                    styles.text,
-                    { textDecorationLine: "line-through", color: "#73737330" },
-                  ]
+                  styles.text,
+                  { textDecorationLine: "line-through", color: "#73737330" },
+                ]
                 : styles.text
             }
           >
@@ -55,13 +55,13 @@ export default function Todo({ id, text, isCompleted, isToday, hour }) {
             style={
               isCompleted
                 ? [
-                    styles.time,
-                    { textDecorationLine: "line-through", color: "#73737330" },
-                  ]
+                  styles.time,
+                  { textDecorationLine: "line-through", color: "#73737330" },
+                ]
                 : styles.time
             }
           >
-            {moment(localHour).format("LT")}
+            {moment(hour).format("LT")}
           </Text>
         </View>
       </View>
