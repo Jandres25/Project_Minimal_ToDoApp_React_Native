@@ -17,6 +17,7 @@ import { addTodoThunk } from "../redux/todosSlice";
 import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import moment from "moment";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function AddTodo() {
   const [name, setName] = React.useState("");
@@ -27,6 +28,8 @@ export default function AddTodo() {
   const [withAlert, setWithAlert] = React.useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => makeStyles(colors), [colors]);
 
   const handleAlertToggle = async (value) => {
     if (value) {
@@ -127,7 +130,7 @@ export default function AddTodo() {
             <TextInput
               style={styles.textInput}
               placeholder="Task"
-              placeholderTextColor="#00000030"
+              placeholderTextColor={colors.placeholder}
               onChangeText={setName}
             />
           </View>
@@ -137,7 +140,7 @@ export default function AddTodo() {
               style={styles.buttonContainer}
               onPress={() => setTimePicker(true)}
             >
-              <Text style={{ color: "white" }}>
+              <Text style={{ color: colors.primaryButtonText }}>
                 {timeSelected ? moment(date).format("LT") : "Pick time"}
               </Text>
             </TouchableOpacity>
@@ -156,7 +159,7 @@ export default function AddTodo() {
                   style={[styles.button, { marginTop: 0, marginBottom: 20 }]}
                   onPress={() => setTimePicker(false)}
                 >
-                  <Text style={{ color: "white" }}>Done</Text>
+                  <Text style={{ color: colors.primaryButtonText }}>Done</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -164,23 +167,31 @@ export default function AddTodo() {
           <View style={[styles.inputContainer, { paddingBottom: 0, alignItems: "center" }]}>
             <View>
               <Text style={styles.inputTitle}>Today</Text>
-              <Text style={{ color: "#00000040", fontSize: 12, maxWidth: "85%", paddingBottom: 10 }}>
+              <Text style={styles.caption}>
                 If you disable today, the task will be considered as tomorrow
               </Text>
             </View>
-            <Switch value={isToday} onValueChange={setIsToday} />
+            <Switch
+              value={isToday}
+              onValueChange={setIsToday}
+              trackColor={{ false: colors.border, true: colors.accent }}
+            />
           </View>
           <View style={[styles.inputContainer, { paddingBottom: 0, alignItems: "center" }]}>
             <View>
               <Text style={styles.inputTitle}>Alert</Text>
-              <Text style={{ color: "#00000040", fontSize: 12, maxWidth: "85%" }}>
+              <Text style={styles.caption}>
                 You will receive an alert at the time you set for this reminder
               </Text>
             </View>
-            <Switch value={withAlert} onValueChange={handleAlertToggle} />
+            <Switch
+              value={withAlert}
+              onValueChange={handleAlertToggle}
+              trackColor={{ false: colors.border, true: colors.accent }}
+            />
           </View>
           <TouchableOpacity style={styles.button} onPress={addTodo}>
-            <Text style={{ color: "white" }}>Done</Text>
+            <Text style={{ color: colors.primaryButtonText }}>Done</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -188,49 +199,59 @@ export default function AddTodo() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 34,
-    fontWeight: "bold",
-    marginBottom: 35,
-    marginTop: 10,
-  },
-  textInput: {
-    borderBottomColor: "#00000030",
-    borderBottomWidth: 1,
-    width: "60%",
-    paddingBottom: 4,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#F7F8FA",
-    paddingHorizontal: 30,
-  },
-  inputTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    lineHeight: 24,
-  },
-  inputContainer: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingBottom: 30,
-  },
-  button: {
-    marginTop: 30,
-    marginBottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#000000",
-    height: 46,
-    borderRadius: 11,
-  },
-  buttonContainer: {
-    backgroundColor: "#000000",
-    height: 40,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 8,
-  },
-});
+const makeStyles = (colors) =>
+  StyleSheet.create({
+    title: {
+      fontSize: 34,
+      fontWeight: "bold",
+      marginBottom: 35,
+      marginTop: 10,
+      color: colors.text,
+    },
+    textInput: {
+      borderBottomColor: colors.divider,
+      borderBottomWidth: 1,
+      width: "60%",
+      paddingBottom: 4,
+      color: colors.text,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingHorizontal: 30,
+    },
+    inputTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      lineHeight: 24,
+      color: colors.text,
+    },
+    inputContainer: {
+      justifyContent: "space-between",
+      flexDirection: "row",
+      paddingBottom: 30,
+    },
+    caption: {
+      color: colors.captionText,
+      fontSize: 12,
+      maxWidth: "85%",
+      paddingBottom: 10,
+    },
+    button: {
+      marginTop: 30,
+      marginBottom: 15,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.primaryButton,
+      height: 46,
+      borderRadius: 11,
+    },
+    buttonContainer: {
+      backgroundColor: colors.primaryButton,
+      height: 40,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 8,
+    },
+  });

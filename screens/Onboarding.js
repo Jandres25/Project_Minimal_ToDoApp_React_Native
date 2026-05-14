@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   Text,
   Image,
@@ -8,9 +9,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Onboarding() {
   const navigation = useNavigation();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const handleContinue = async () => {
     const { status } = await Notifications.getPermissionsAsync();
@@ -59,59 +63,59 @@ export default function Onboarding() {
         </View>
       </View>
       <View style={{ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "flex-end", paddingBottom: 20 }}>
-        <TouchableOpacity
-          onPress={handleContinue}
-          style={styles.button}
-        >
-          <Text style={[styles.subTitle, { color: "#fff" }]}>Continue</Text>
+        <TouchableOpacity onPress={handleContinue} style={styles.button}>
+          <Text style={[styles.subTitle, { color: colors.primaryButtonText }]}>Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginTop: 40,
-    marginBottom: 40,
-  },
-  subTitle: {
-    fontSize: 15,
-    fontWeight: "600",
-    lineHeight: 22,
-  },
-  subHeadline: {
-    fontSize: 15,
-    fontWeight: "400",
-    lineHeight: 20,
-    color: "#828282",
-  },
-  featureContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginBottom: 30,
-  },
-  icon: {
-    width: 42,
-    height: 42,
-    marginRight: 20,
-    resizeMode: "contain",
-  },
-  button: {
-    backgroundColor: "#000000",
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "90%",
-    borderRadius: 12,
-  },
-});
+const makeStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      alignItems: "center",
+      justifyContent: "flex-start",
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: "bold",
+      marginTop: 40,
+      marginBottom: 40,
+      color: colors.text,
+    },
+    subTitle: {
+      fontSize: 15,
+      fontWeight: "600",
+      lineHeight: 22,
+      color: colors.text,
+    },
+    subHeadline: {
+      fontSize: 15,
+      fontWeight: "400",
+      lineHeight: 20,
+      color: colors.textMuted,
+    },
+    featureContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      marginBottom: 30,
+    },
+    icon: {
+      width: 42,
+      height: 42,
+      marginRight: 20,
+      resizeMode: "contain",
+    },
+    button: {
+      backgroundColor: colors.primaryButton,
+      height: 50,
+      alignItems: "center",
+      justifyContent: "center",
+      width: "90%",
+      borderRadius: 12,
+    },
+  });

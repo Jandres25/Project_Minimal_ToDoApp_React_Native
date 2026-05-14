@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { hideCompletedReducer } from "../redux/todosSlice";
 import * as Notifications from "expo-notifications";
 import moment from "moment";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../theme/ThemeContext";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -31,6 +33,8 @@ export default function Home() {
   const hideCompleted = useSelector((state) => state.todos.hideCompleted);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { mode, toggle, colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
     checkFirstLaunch();
@@ -63,116 +67,124 @@ export default function Home() {
 
   return todos.length > 0 ? (
     <ScrollView style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.headerRow}>
         <Text style={styles.title}>Today</Text>
-        <TouchableOpacity onPress={handleHideCompleted}>
-          <Text style={{ color: "#3478F6" }}>
-            {hideCompleted ? "Show Completed" : "Hide Completed"}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={handleHideCompleted} style={styles.hideBtn}>
+            <Text style={{ color: colors.accent }}>
+              {hideCompleted ? "Show Completed" : "Hide Completed"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggle}>
+            <Ionicons
+              name={mode === "dark" ? "sunny-outline" : "moon-outline"}
+              size={22}
+              color={colors.textSecondary}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       {todayTodos.length > 0 ? (
         <TodoList todosData={todayTodos} />
       ) : (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
+        <View style={styles.emptyState}>
           <Image
             source={require("../assets/nothingToday.png")}
-            style={{
-              width: 150,
-              height: 150,
-              marginBottom: 20,
-              resizeMode: "contain",
-            }}
+            style={styles.emptyImage}
           />
-          <Text style={{ fontSize: 13, color: "#000", fontWeight: "bold" }}>
-            CONGRATS!
-          </Text>
-          <Text style={{ fontSize: 13, color: "#737373", fontWeight: "500" }}>
-            You don't have any task, enjoy your day.
-          </Text>
+          <Text style={styles.emptyTitle}>CONGRATS!</Text>
+          <Text style={styles.emptySubtitle}>You don't have any task, enjoy your day.</Text>
         </View>
       )}
       <Text style={styles.title}>Tomorrow</Text>
       {tomorrowTodos.length > 0 ? (
         <TodoList todosData={tomorrowTodos} />
       ) : (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
+        <View style={styles.emptyState}>
           <Image
             source={require("../assets/nothingTomorrow.png")}
-            style={{
-              width: 150,
-              height: 150,
-              marginBottom: 20,
-              resizeMode: "contain",
-            }}
+            style={styles.emptyImage}
           />
-          <Text style={{ fontSize: 13, color: "#000", fontWeight: "bold" }}>
-            NICE!
-          </Text>
-          <Text style={{ fontSize: 13, color: "#737373", fontWeight: "500" }}>
-            Nothing is scheduled for tomorrow..
-          </Text>
+          <Text style={styles.emptyTitle}>NICE!</Text>
+          <Text style={styles.emptySubtitle}>Nothing is scheduled for tomorrow..</Text>
         </View>
       )}
     </ScrollView>
   ) : (
     <View style={styles.container}>
-      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+      <View style={styles.emptyFullScreen}>
+        <TouchableOpacity onPress={toggle} style={styles.toggleAbsolute}>
+          <Ionicons
+            name={mode === "dark" ? "sunny-outline" : "moon-outline"}
+            size={22}
+            color={colors.textSecondary}
+          />
+        </TouchableOpacity>
         <Image
           source={require("../assets/nothing.png")}
-          style={{
-            width: 200,
-            height: 200,
-            marginBottom: 20,
-            resizeMode: "contain",
-          }}
+          style={[styles.emptyImage, { width: 200, height: 200 }]}
         />
-        <Text style={{ fontSize: 13, color: "#000", fontWeight: "bold" }}>
-          NICE!
-        </Text>
-        <Text style={{ fontSize: 13, color: "#737373", fontWeight: "500" }}>
-          Nothing is scheduled.
-        </Text>
+        <Text style={styles.emptyTitle}>NICE!</Text>
+        <Text style={styles.emptySubtitle}>Nothing is scheduled.</Text>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 34,
-    fontWeight: "bold",
-    marginBottom: 35,
-    marginTop: 10,
-  },
-  pic: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignSelf: "flex-end",
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 15,
-  },
-});
+const makeStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: 15,
+    },
+    title: {
+      fontSize: 34,
+      fontWeight: "bold",
+      marginBottom: 35,
+      marginTop: 10,
+      color: colors.text,
+    },
+    headerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    headerActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    hideBtn: {},
+    emptyState: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    emptyFullScreen: {
+      justifyContent: "center",
+      alignItems: "center",
+      flex: 1,
+    },
+    emptyImage: {
+      width: 150,
+      height: 150,
+      marginBottom: 20,
+      resizeMode: "contain",
+    },
+    emptyTitle: {
+      fontSize: 13,
+      color: colors.text,
+      fontWeight: "bold",
+    },
+    emptySubtitle: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      fontWeight: "500",
+    },
+    toggleAbsolute: {
+      position: "absolute",
+      top: 10,
+      right: 0,
+    },
+  });
