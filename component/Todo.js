@@ -3,37 +3,30 @@ import * as React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Checkbox from "./Checkbox";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteTodoReducer } from "../redux/todosSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { deleteTodoThunk } from "../redux/todosSlice";
 import * as Notifications from "expo-notifications";
 
-export default function Todo({ id, text, isCompleted, hour, notificationId }) {
+function Todo({ id, text, isCompleted, hour, notificationId }) {
   const thisTodoIsToday = hour ? moment(hour).isSame(moment(), "day") : false;
-  const todos = useSelector((state) => state.todos.todos);
   const dispatch = useDispatch();
 
-  const handleDeletedTodo = async () => {
+  const handleDeletedTodo = React.useCallback(async () => {
     try {
       if (notificationId) {
         await Notifications.cancelScheduledNotificationAsync(notificationId);
       }
-      await AsyncStorage.setItem(
-        "Todos",
-        JSON.stringify(todos.filter((todo) => todo.id !== id))
-      );
-      dispatch(deleteTodoReducer(id));
+      dispatch(deleteTodoThunk(id));
     } catch (e) {
-      console.log(e);
+      if (__DEV__) console.log(e);
     }
-  };
+  }, [id, notificationId]);
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Checkbox
           id={id}
-          text={text}
-          hour={hour}
           isCompleted={isCompleted}
           isToday={thisTodoIsToday}
         />
@@ -42,10 +35,7 @@ export default function Todo({ id, text, isCompleted, hour, notificationId }) {
             selectable
             style={
               isCompleted
-                ? [
-                  styles.text,
-                  { textDecorationLine: "line-through", color: "#73737330" },
-                ]
+                ? [styles.text, { textDecorationLine: "line-through", color: "#73737330" }]
                 : styles.text
             }
           >
@@ -54,10 +44,7 @@ export default function Todo({ id, text, isCompleted, hour, notificationId }) {
           <Text
             style={
               isCompleted
-                ? [
-                  styles.time,
-                  { textDecorationLine: "line-through", color: "#73737330" },
-                ]
+                ? [styles.time, { textDecorationLine: "line-through", color: "#73737330" }]
                 : styles.time
             }
           >
@@ -71,6 +58,8 @@ export default function Todo({ id, text, isCompleted, hour, notificationId }) {
     </View>
   );
 }
+
+export default React.memo(Todo);
 
 const styles = StyleSheet.create({
   container: {

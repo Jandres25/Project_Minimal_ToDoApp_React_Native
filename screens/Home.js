@@ -60,7 +60,7 @@ export default function Home() {
       await AsyncStorage.setItem("@FirstLaunch", "true");
       navigation.navigate("Onboarding");
     } catch (e) {
-      console.log(e);
+      if (__DEV__) console.log(e);
     }
   };
 

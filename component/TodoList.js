@@ -2,7 +2,7 @@ import * as React from "react";
 import { FlatList } from "react-native";
 import Todo from "./Todo";
 
-export default function TodoList({ todosData }) {
+function TodoList({ todosData }) {
   return (
     <FlatList
       data={todosData}
@@ -12,3 +12,5 @@ export default function TodoList({ todosData }) {
     />
   );
 }
+
+export default React.memo(TodoList);
