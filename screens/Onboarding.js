@@ -7,9 +7,25 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import * as Notifications from "expo-notifications";
 
 export default function Onboarding() {
   const navigation = useNavigation();
+
+  const handleContinue = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== "granted") {
+      await Notifications.requestPermissionsAsync();
+    }
+    if (Notifications.setNotificationChannelAsync) {
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+      });
+    }
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,7 +60,7 @@ export default function Onboarding() {
       </View>
       <View style={{ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "flex-end", paddingBottom: 20 }}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={handleContinue}
           style={styles.button}
         >
           <Text style={[styles.subTitle, { color: "#fff" }]}>Continue</Text>

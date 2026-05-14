@@ -33,23 +33,8 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    requestNotificationPermissions();
     checkFirstLaunch();
   }, []);
-
-  const requestNotificationPermissions = async () => {
-    const { status } = await Notifications.getPermissionsAsync();
-    if (status !== "granted") {
-      await Notifications.requestPermissionsAsync();
-    }
-    if (Notifications.setNotificationChannelAsync) {
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-      });
-    }
-  };
 
   const checkFirstLaunch = async () => {
     try {
