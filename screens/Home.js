@@ -18,6 +18,7 @@ import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../theme/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "../i18n/LanguageContext";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -36,6 +37,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const { mode, toggle, colors } = useTheme();
   const { t } = useTranslation();
+  const { language, toggle: toggleLanguage } = useLanguage();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
@@ -77,6 +79,9 @@ export default function Home() {
               {hideCompleted ? t("home.showCompleted") : t("home.hideCompleted")}
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={toggleLanguage}>
+            <Text style={styles.langToggle}>{language === "es" ? "EN" : "ES"}</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={toggle}>
             <Ionicons
               name={mode === "dark" ? "sunny-outline" : "moon-outline"}
@@ -115,6 +120,9 @@ export default function Home() {
   ) : (
     <View style={styles.container}>
       <View style={styles.emptyFullScreen}>
+        <TouchableOpacity onPress={toggleLanguage} style={styles.langToggleAbsolute}>
+          <Text style={styles.langToggle}>{language === "es" ? "EN" : "ES"}</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggle} style={styles.toggleAbsolute}>
           <Ionicons
             name={mode === "dark" ? "sunny-outline" : "moon-outline"}
@@ -188,5 +196,15 @@ const makeStyles = (colors) =>
       position: "absolute",
       top: 10,
       right: 0,
+    },
+    langToggleAbsolute: {
+      position: "absolute",
+      top: 10,
+      right: 34,
+    },
+    langToggle: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: colors.textSecondary,
     },
   });

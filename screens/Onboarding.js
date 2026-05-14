@@ -11,11 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { useTheme } from "../theme/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Onboarding() {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { language, toggle: toggleLanguage } = useLanguage();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const handleContinue = async () => {
@@ -35,6 +37,9 @@ export default function Onboarding() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={toggleLanguage} style={styles.langToggle}>
+        <Text style={styles.langToggleText}>{language === "es" ? "EN" : "ES"}</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>{t("onboarding.title")}</Text>
       <View style={styles.featureContainer}>
         <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/arrows.png")} />
@@ -112,5 +117,15 @@ const makeStyles = (colors) =>
       justifyContent: "center",
       width: "90%",
       borderRadius: 12,
+    },
+    langToggle: {
+      position: "absolute",
+      top: 16,
+      right: 20,
+    },
+    langToggleText: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: colors.textSecondary,
     },
   });
