@@ -6,10 +6,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { deleteTodoThunk } from "../redux/todosSlice";
 import * as Notifications from "expo-notifications";
+import { useTheme } from "../theme/ThemeContext";
 
 function Todo({ id, text, isCompleted, hour, notificationId }) {
   const thisTodoIsToday = hour ? moment(hour).isSame(moment(), "day") : false;
   const dispatch = useDispatch();
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => makeStyles(colors), [colors]);
 
   const handleDeletedTodo = React.useCallback(async () => {
     try {
@@ -35,7 +38,7 @@ function Todo({ id, text, isCompleted, hour, notificationId }) {
             selectable
             style={
               isCompleted
-                ? [styles.text, { textDecorationLine: "line-through", color: "#73737330" }]
+                ? [styles.text, { textDecorationLine: "line-through", color: colors.textDisabled }]
                 : styles.text
             }
           >
@@ -44,7 +47,7 @@ function Todo({ id, text, isCompleted, hour, notificationId }) {
           <Text
             style={
               isCompleted
-                ? [styles.time, { textDecorationLine: "line-through", color: "#73737330" }]
+                ? [styles.time, { textDecorationLine: "line-through", color: colors.textDisabled }]
                 : styles.time
             }
           >
@@ -53,7 +56,7 @@ function Todo({ id, text, isCompleted, hour, notificationId }) {
         </View>
       </View>
       <TouchableOpacity onPress={handleDeletedTodo}>
-        <MaterialIcons name="delete-outline" size={24} color="#73737340" />
+        <MaterialIcons name="delete-outline" size={24} color={colors.textDisabled} />
       </TouchableOpacity>
     </View>
   );
@@ -61,21 +64,22 @@ function Todo({ id, text, isCompleted, hour, notificationId }) {
 
 export default React.memo(Todo);
 
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  text: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#737373",
-  },
-  time: {
-    fontSize: 13,
-    color: "#a3a3a3",
-    fontWeight: "500",
-  },
-});
+const makeStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      marginBottom: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    text: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: colors.textSecondary,
+    },
+    time: {
+      fontSize: 13,
+      color: colors.textMuted,
+      fontWeight: "500",
+    },
+  });
