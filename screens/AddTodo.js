@@ -16,19 +16,24 @@ import { addTodoReducer } from "../redux/todosSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
+import moment from "moment";
 
 export default function AddTodo() {
   const [name, setName] = React.useState("");
   const [timePicker, setTimePicker] = React.useState(false);
   const [date, setDate] = React.useState(new Date());
+  const [timeSelected, setTimeSelected] = React.useState(false);
   const [isToday, setIsToday] = React.useState(false);
   const [withAlert, setWithAlert] = React.useState(false);
-  // const [listTodos, setListTodos] = React.useState([]);
   const listTodos = useSelector((state) => state.todos.todos);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const addTodo = async () => {
+    if (!name.trim()) {
+      alert("Please enter a task name.");
+      return;
+    }
     const newTodo = {
       id: Date.now().toString(),
       text: name,
@@ -62,8 +67,18 @@ export default function AddTodo() {
   }
 
   function onTimeSelected(event, value) {
-    setDate(value);
-    setTimePicker(false);
+    if (Platform.OS === "android") {
+      setTimePicker(false);
+      if (event.type === "set" && value) {
+        setDate(value);
+        setTimeSelected(true);
+      }
+    } else {
+      if (value) {
+        setDate(value);
+        setTimeSelected(true);
+      }
+    }
   }
 
   const scheduleTodoNotification = async (todo) => {
@@ -99,7 +114,7 @@ export default function AddTodo() {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Add Task</Text>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { alignItems: "center" }]}>
           <Text style={styles.inputTitle}>Name</Text>
           <TextInput
             style={styles.textInput}
@@ -110,9 +125,19 @@ export default function AddTodo() {
             }}
           />
         </View>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { alignItems: "center" }]}>
           <Text style={styles.inputTitle}>Hour</Text>
-          {timePicker && (
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={showTimePicker}
+          >
+            <Text style={{ color: "white" }}>
+              {timeSelected ? moment(date).format("LT") : "Pick time"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {timePicker && (
+          <View>
             <DateTimePicker
               value={date}
               mode={"time"}
@@ -120,16 +145,16 @@ export default function AddTodo() {
               onChange={onTimeSelected}
               display={Platform.OS === "ios" ? "spinner" : "default"}
             />
-          )}
-          {!timePicker && (
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={showTimePicker}
-            >
-              <Text style={{ color: "white" }}>Time</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+            {Platform.OS === "ios" && (
+              <TouchableOpacity
+                style={[styles.button, { marginTop: 0, marginBottom: 20 }]}
+                onPress={() => setTimePicker(false)}
+              >
+                <Text style={{ color: "white" }}>Done</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
         <View
           style={[
             styles.inputContainer,
@@ -193,7 +218,8 @@ const styles = StyleSheet.create({
   textInput: {
     borderBottomColor: "#00000030",
     borderBottomWidth: 1,
-    width: "80%",
+    width: "60%",
+    paddingBottom: 4,
   },
   container: {
     flex: 1,

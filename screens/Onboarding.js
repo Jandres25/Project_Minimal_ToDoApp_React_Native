@@ -4,15 +4,15 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Onboarding() {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Welcome to Minima</Text>
       <View style={styles.featureContainer}>
         <Image style={styles.icon} source={require("../assets/arrows.png")} />
@@ -42,13 +42,7 @@ export default function Onboarding() {
           </Text>
         </View>
       </View>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 40,
-        }}
-      >
+      <View style={{ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "flex-end", paddingBottom: 20 }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.button}
@@ -56,7 +50,7 @@ export default function Onboarding() {
           <Text style={[styles.subTitle, { color: "#fff" }]}>Continue</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -70,7 +64,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    marginTop: 100,
+    marginTop: 40,
+    marginBottom: 40,
   },
   subTitle: {
     fontSize: 15,
@@ -96,14 +91,11 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   button: {
-    // backgroundColor: '#007AFF',
     backgroundColor: "#000000",
     height: 50,
     alignItems: "center",
     justifyContent: "center",
     width: "90%",
     borderRadius: 12,
-    marginTop: 100,
-    position: "absolute",
   },
 });

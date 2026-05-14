@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Home from "./screens/Home";
 import { NavigationContainer } from "@react-navigation/native";
@@ -30,6 +31,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
+        <StatusBar style="auto" />
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen

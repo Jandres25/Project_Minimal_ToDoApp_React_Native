@@ -6,8 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import TodoList from "../component/TodoList";
 import { useGetTodos } from "../hooks/useGetTodos";
 import { useNavigation } from "@react-navigation/native";
@@ -74,9 +74,6 @@ export default function Home() {
 
   return todos.length > 0 ? (
     <ScrollView style={styles.container}>
-      {/* <Image 
-                source={{ uri: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg'}} 
-                style={styles.pic} /> */}
       <View
         style={{
           flexDirection: "row",
@@ -148,13 +145,9 @@ export default function Home() {
           </Text>
         </View>
       )}
-      <StatusBar style="auto" />
     </ScrollView>
   ) : (
     <View style={styles.container}>
-      {/* <Image 
-                source={{ uri: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg'}} 
-                style={styles.pic} /> */}
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <Image
           source={require("../assets/nothing.png")}
