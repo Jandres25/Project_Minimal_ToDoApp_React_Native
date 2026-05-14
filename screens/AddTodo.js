@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import moment from "moment";
 import { useTheme } from "../theme/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export default function AddTodo() {
   const [name, setName] = React.useState("");
@@ -29,6 +30,7 @@ export default function AddTodo() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const styles = React.useMemo(() => makeStyles(colors), [colors]);
 
   const handleAlertToggle = async (value) => {
@@ -37,7 +39,7 @@ export default function AddTodo() {
       if (status !== "granted") {
         const { status: newStatus } = await Notifications.requestPermissionsAsync();
         if (newStatus !== "granted") {
-          alert("Notification permissions are required to set alerts.");
+          alert(t("addTodo.errors.notificationPermission"));
           return;
         }
       }
@@ -47,15 +49,15 @@ export default function AddTodo() {
 
   const addTodo = async () => {
     if (!name.trim()) {
-      alert("Please enter a task name.");
+      alert(t("addTodo.errors.nameRequired"));
       return;
     }
     if (!timeSelected) {
-      alert("Please select a time for the task.");
+      alert(t("addTodo.errors.timeRequired"));
       return;
     }
     if (isToday && date <= new Date()) {
-      alert("The selected time has already passed. Please pick a future time.");
+      alert(t("addTodo.errors.pastTime"));
       return;
     }
     const newTodo = {
@@ -101,7 +103,7 @@ export default function AddTodo() {
     try {
       const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
-          title: "It's time! You have a task to do!!!",
+          title: t("notification.title"),
           body: todo.text,
         },
         trigger: {
@@ -112,7 +114,7 @@ export default function AddTodo() {
       return notificationId;
     } catch (e) {
       if (__DEV__) console.log(e);
-      alert("The notification failed to schedule, make sure the hour is valid.");
+      alert(t("addTodo.errors.notificationSchedule"));
       return null;
     }
   };
@@ -124,24 +126,24 @@ export default function AddTodo() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Text style={styles.title}>Add Task</Text>
+          <Text style={styles.title}>{t("addTodo.screenTitle")}</Text>
           <View style={[styles.inputContainer, { alignItems: "center" }]}>
-            <Text style={styles.inputTitle}>Name</Text>
+            <Text style={styles.inputTitle}>{t("addTodo.nameLabel")}</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Task"
+              placeholder={t("addTodo.namePlaceholder")}
               placeholderTextColor={colors.placeholder}
               onChangeText={setName}
             />
           </View>
           <View style={[styles.inputContainer, { alignItems: "center" }]}>
-            <Text style={styles.inputTitle}>Hour</Text>
+            <Text style={styles.inputTitle}>{t("addTodo.hourLabel")}</Text>
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => setTimePicker(true)}
             >
               <Text style={{ color: colors.primaryButtonText }}>
-                {timeSelected ? moment(date).format("LT") : "Pick time"}
+                {timeSelected ? moment(date).format("LT") : t("addTodo.pickTime")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -159,16 +161,16 @@ export default function AddTodo() {
                   style={[styles.button, { marginTop: 0, marginBottom: 20 }]}
                   onPress={() => setTimePicker(false)}
                 >
-                  <Text style={{ color: colors.primaryButtonText }}>Done</Text>
+                  <Text style={{ color: colors.primaryButtonText }}>{t("common.done")}</Text>
                 </TouchableOpacity>
               )}
             </View>
           )}
           <View style={[styles.inputContainer, { paddingBottom: 0, alignItems: "center" }]}>
             <View>
-              <Text style={styles.inputTitle}>Today</Text>
+              <Text style={styles.inputTitle}>{t("addTodo.todayLabel")}</Text>
               <Text style={styles.caption}>
-                If you disable today, the task will be considered as tomorrow
+                {t("addTodo.todayCaption")}
               </Text>
             </View>
             <Switch
@@ -179,9 +181,9 @@ export default function AddTodo() {
           </View>
           <View style={[styles.inputContainer, { paddingBottom: 0, alignItems: "center" }]}>
             <View>
-              <Text style={styles.inputTitle}>Alert</Text>
+              <Text style={styles.inputTitle}>{t("addTodo.alertLabel")}</Text>
               <Text style={styles.caption}>
-                You will receive an alert at the time you set for this reminder
+                {t("addTodo.alertCaption")}
               </Text>
             </View>
             <Switch
@@ -191,7 +193,7 @@ export default function AddTodo() {
             />
           </View>
           <TouchableOpacity style={styles.button} onPress={addTodo}>
-            <Text style={{ color: colors.primaryButtonText }}>Done</Text>
+            <Text style={{ color: colors.primaryButtonText }}>{t("common.done")}</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>

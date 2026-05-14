@@ -17,6 +17,7 @@ import * as Notifications from "expo-notifications";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../theme/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -34,6 +35,7 @@ export default function Home() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { mode, toggle, colors } = useTheme();
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
@@ -68,11 +70,11 @@ export default function Home() {
   return todos.length > 0 ? (
     <ScrollView style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>Today</Text>
+        <Text style={styles.title}>{t("home.today")}</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleHideCompleted} style={styles.hideBtn}>
             <Text style={{ color: colors.accent }}>
-              {hideCompleted ? "Show Completed" : "Hide Completed"}
+              {hideCompleted ? t("home.showCompleted") : t("home.hideCompleted")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={toggle}>
@@ -92,11 +94,11 @@ export default function Home() {
             source={require("../assets/nothingToday.png")}
             style={[styles.emptyImage, { tintColor: colors.text }]}
           />
-          <Text style={styles.emptyTitle}>CONGRATS!</Text>
-          <Text style={styles.emptySubtitle}>You don't have any task, enjoy your day.</Text>
+          <Text style={styles.emptyTitle}>{t("home.emptyTodayTitle")}</Text>
+          <Text style={styles.emptySubtitle}>{t("home.emptyTodaySubtitle")}</Text>
         </View>
       )}
-      <Text style={styles.title}>Tomorrow</Text>
+      <Text style={styles.title}>{t("home.tomorrow")}</Text>
       {tomorrowTodos.length > 0 ? (
         <TodoList todosData={tomorrowTodos} />
       ) : (
@@ -105,8 +107,8 @@ export default function Home() {
             source={require("../assets/nothingTomorrow.png")}
             style={[styles.emptyImage, { tintColor: colors.text }]}
           />
-          <Text style={styles.emptyTitle}>NICE!</Text>
-          <Text style={styles.emptySubtitle}>Nothing is scheduled for tomorrow..</Text>
+          <Text style={styles.emptyTitle}>{t("home.emptyTomorrowTitle")}</Text>
+          <Text style={styles.emptySubtitle}>{t("home.emptyTomorrowSubtitle")}</Text>
         </View>
       )}
     </ScrollView>
@@ -124,8 +126,8 @@ export default function Home() {
           source={require("../assets/nothing.png")}
           style={[styles.emptyImage, { width: 200, height: 200, tintColor: colors.text }]}
         />
-        <Text style={styles.emptyTitle}>NICE!</Text>
-        <Text style={styles.emptySubtitle}>Nothing is scheduled.</Text>
+        <Text style={styles.emptyTitle}>{t("home.emptyAllTitle")}</Text>
+        <Text style={styles.emptySubtitle}>{t("home.emptyAllSubtitle")}</Text>
       </View>
     </View>
   );

@@ -10,10 +10,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { useTheme } from "../theme/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export default function Onboarding() {
   const navigation = useNavigation();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const handleContinue = async () => {
@@ -33,38 +35,31 @@ export default function Onboarding() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Welcome to Minima</Text>
+      <Text style={styles.title}>{t("onboarding.title")}</Text>
       <View style={styles.featureContainer}>
         <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/arrows.png")} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.subTitle}>Manage Daily Tasks</Text>
-          <Text style={styles.subHeadline}>
-            Minima is a simple app that helps you to increase your productivity.
-          </Text>
+          <Text style={styles.subTitle}>{t("onboarding.feature1Title")}</Text>
+          <Text style={styles.subHeadline}>{t("onboarding.feature1Body")}</Text>
         </View>
       </View>
       <View style={styles.featureContainer}>
         <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/bell.png")} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.subTitle}>Notifications</Text>
-          <Text style={styles.subHeadline}>
-            Get notified when it's time to do you tasks.
-          </Text>
+          <Text style={styles.subTitle}>{t("onboarding.feature2Title")}</Text>
+          <Text style={styles.subHeadline}>{t("onboarding.feature2Body")}</Text>
         </View>
       </View>
       <View style={styles.featureContainer}>
         <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/design.png")} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.subTitle}>Minimal Design</Text>
-          <Text style={styles.subHeadline}>
-            Enjoy a simple design that allows you to focus only on what you have
-            to do.
-          </Text>
+          <Text style={styles.subTitle}>{t("onboarding.feature3Title")}</Text>
+          <Text style={styles.subHeadline}>{t("onboarding.feature3Body")}</Text>
         </View>
       </View>
       <View style={{ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "flex-end", paddingBottom: 20 }}>
         <TouchableOpacity onPress={handleContinue} style={styles.button}>
-          <Text style={[styles.subTitle, { color: colors.primaryButtonText }]}>Continue</Text>
+          <Text style={[styles.subTitle, { color: colors.primaryButtonText }]}>{t("common.continue")}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
