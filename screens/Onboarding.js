@@ -42,21 +42,21 @@ export default function Onboarding() {
       </TouchableOpacity>
       <Text style={styles.title}>{t("onboarding.title")}</Text>
       <View style={styles.featureContainer}>
-        <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/arrows.png")} />
+        <Image style={styles.icon} source={require("../assets/arrows.png")} />
         <View style={{ flex: 1 }}>
           <Text style={styles.subTitle}>{t("onboarding.feature1Title")}</Text>
           <Text style={styles.subHeadline}>{t("onboarding.feature1Body")}</Text>
         </View>
       </View>
       <View style={styles.featureContainer}>
-        <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/bell.png")} />
+        <Image style={styles.icon} source={require("../assets/bell.png")} />
         <View style={{ flex: 1 }}>
           <Text style={styles.subTitle}>{t("onboarding.feature2Title")}</Text>
           <Text style={styles.subHeadline}>{t("onboarding.feature2Body")}</Text>
         </View>
       </View>
       <View style={styles.featureContainer}>
-        <Image style={[styles.icon, { tintColor: colors.text }]} source={require("../assets/design.png")} />
+        <Image style={styles.icon} source={require("../assets/design.png")} />
         <View style={{ flex: 1 }}>
           <Text style={styles.subTitle}>{t("onboarding.feature3Title")}</Text>
           <Text style={styles.subHeadline}>{t("onboarding.feature3Body")}</Text>
