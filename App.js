@@ -11,6 +11,9 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import React, { useMemo } from "react";
 import { ThemeProvider, useTheme } from "./theme/ThemeContext";
+import { LanguageProvider } from "./i18n/LanguageContext";
+import { useTranslation } from "react-i18next";
+import "./i18n";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +37,7 @@ function HomeScreen() {
 
 function ThemedApp() {
   const { mode, colors } = useTheme();
+  const { t } = useTranslation();
 
   const navTheme = useMemo(() => ({
     ...(mode === "dark" ? DarkTheme : DefaultTheme),
@@ -69,7 +73,7 @@ function ThemedApp() {
             component={AddTodo}
             options={{
               presentation: "modal",
-              headerTitle: "Task",
+              headerTitle: t("addTodo.headerTitle"),
             }}
           />
           <Stack.Screen
@@ -90,9 +94,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <SafeAreaProvider>
-          <ThemedApp />
-        </SafeAreaProvider>
+        <LanguageProvider>
+          <SafeAreaProvider>
+            <ThemedApp />
+          </SafeAreaProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </Provider>
   );
