@@ -12,6 +12,8 @@ A clean and minimal task management mobile application built with React Native a
 - Persistent storage — tasks survive app restarts
 - Expired tasks (past days) are automatically removed on launch
 - Onboarding screen on first launch
+- Dark/light mode — follows OS setting by default, toggleable at runtime
+- English/Spanish language support — follows OS locale by default, toggleable at runtime
 
 ## Tech Stack
 
@@ -23,6 +25,8 @@ A clean and minimal task management mobile application built with React Native a
 | Persistence      | AsyncStorage (managed via Redux thunks)            |
 | Notifications    | expo-notifications                                 |
 | Date handling    | moment.js + @react-native-community/datetimepicker |
+| Theming          | Custom ThemeContext (dark/light, AsyncStorage)     |
+| Internationalization | i18next + react-i18next + expo-localization    |
 
 ## Getting Started
 
@@ -70,6 +74,15 @@ pnpm ios
 │   └── todosSlice.js       # Todos slice: reducers + async thunks for persistence
 ├── hooks/
 │   └── useGetTodos.js      # Hook to trigger todo loading on mount
+├── theme/
+│   ├── ThemeContext.js     # ThemeProvider + useTheme hook (dark/light, OS detection)
+│   └── colors.js           # Light and dark color palettes
+├── i18n/
+│   ├── index.js            # i18next initialization
+│   ├── LanguageContext.js  # LanguageProvider + useLanguage hook (EN/ES, OS detection)
+│   └── locales/
+│       ├── en.json         # English translations
+│       └── es.json         # Spanish translations
 └── assets/                 # Images and icons
 ```
 
@@ -102,6 +115,8 @@ Each task is stored as a JSON object in AsyncStorage under the key `"Todos"`:
 - **Persistence via thunks** — all AsyncStorage reads and writes live in `todosSlice.js` as `createAsyncThunk` actions. Components only dispatch thunks and never touch AsyncStorage directly.
 - **`hideCompleted` as a flag** — completed tasks are filtered in the view layer, not removed from the store, so they can be shown again without reloading from disk.
 - **Notification lifecycle** — when a task with an alert is deleted, its scheduled notification is cancelled via `Notifications.cancelScheduledNotificationAsync`.
+- **Theme system** — `ThemeProvider` reads the OS color scheme via `useColorScheme()` on first launch (`userInterfaceStyle: "automatic"` in `app.json`). User preference is persisted under `@ThemePreference` and overrides the OS default.
+- **i18n system** — `LanguageProvider` reads the device locale via `expo-localization` on first launch, defaulting to Spanish if the locale is `es`, English otherwise. User preference is persisted under `@LanguagePreference`. Both `i18next` and `moment.js` locale are updated on change.
 
 ## Acknowledgements
 
