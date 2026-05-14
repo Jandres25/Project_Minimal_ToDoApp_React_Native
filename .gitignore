@@ -6,6 +6,10 @@ node_modules/
 dist/
 web-build/
 
+# Editor
+.vscode/
+.idea/
+
 # Native
 *.orig.*
 *.jks
