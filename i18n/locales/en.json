@@ -1,0 +1,49 @@
+{
+  "common": {
+    "done": "Done",
+    "continue": "Continue"
+  },
+  "home": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "hideCompleted": "Hide Completed",
+    "showCompleted": "Show Completed",
+    "emptyTodayTitle": "CONGRATS!",
+    "emptyTodaySubtitle": "You don't have any task, enjoy your day.",
+    "emptyTomorrowTitle": "NICE!",
+    "emptyTomorrowSubtitle": "Nothing is scheduled for tomorrow..",
+    "emptyAllTitle": "NICE!",
+    "emptyAllSubtitle": "Nothing is scheduled."
+  },
+  "addTodo": {
+    "headerTitle": "Task",
+    "screenTitle": "Add Task",
+    "nameLabel": "Name",
+    "namePlaceholder": "Task",
+    "hourLabel": "Hour",
+    "pickTime": "Pick time",
+    "todayLabel": "Today",
+    "todayCaption": "If you disable today, the task will be considered as tomorrow",
+    "alertLabel": "Alert",
+    "alertCaption": "You will receive an alert at the time you set for this reminder",
+    "errors": {
+      "notificationPermission": "Notification permissions are required to set alerts.",
+      "nameRequired": "Please enter a task name.",
+      "timeRequired": "Please select a time for the task.",
+      "pastTime": "The selected time has already passed. Please pick a future time.",
+      "notificationSchedule": "The notification failed to schedule, make sure the hour is valid."
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to Minima",
+    "feature1Title": "Manage Daily Tasks",
+    "feature1Body": "Minima is a simple app that helps you to increase your productivity.",
+    "feature2Title": "Notifications",
+    "feature2Body": "Get notified when it's time to do your tasks.",
+    "feature3Title": "Minimal Design",
+    "feature3Body": "Enjoy a simple design that allows you to focus only on what you have to do."
+  },
+  "notification": {
+    "title": "It's time! You have a task to do!!!"
+  }
+}

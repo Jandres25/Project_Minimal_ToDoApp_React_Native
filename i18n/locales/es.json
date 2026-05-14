@@ -1,0 +1,49 @@
+{
+  "common": {
+    "done": "Listo",
+    "continue": "Continuar"
+  },
+  "home": {
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "hideCompleted": "Ocultar completadas",
+    "showCompleted": "Mostrar completadas",
+    "emptyTodayTitle": "¡FELICITACIONES!",
+    "emptyTodaySubtitle": "No tienes tareas, disfruta tu día.",
+    "emptyTomorrowTitle": "¡GENIAL!",
+    "emptyTomorrowSubtitle": "No hay nada programado para mañana..",
+    "emptyAllTitle": "¡GENIAL!",
+    "emptyAllSubtitle": "No hay nada programado."
+  },
+  "addTodo": {
+    "headerTitle": "Tarea",
+    "screenTitle": "Agregar tarea",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Tarea",
+    "hourLabel": "Hora",
+    "pickTime": "Elegir hora",
+    "todayLabel": "Hoy",
+    "todayCaption": "Si desactivas hoy, la tarea se considerará para mañana",
+    "alertLabel": "Alerta",
+    "alertCaption": "Recibirás una alerta a la hora que establezcas para este recordatorio",
+    "errors": {
+      "notificationPermission": "Se requieren permisos de notificación para configurar alertas.",
+      "nameRequired": "Por favor ingresa un nombre para la tarea.",
+      "timeRequired": "Por favor selecciona una hora para la tarea.",
+      "pastTime": "La hora seleccionada ya pasó. Elige una hora futura.",
+      "notificationSchedule": "No se pudo programar la notificación, verifica que la hora sea válida."
+    }
+  },
+  "onboarding": {
+    "title": "Bienvenido a Minima",
+    "feature1Title": "Gestiona tareas diarias",
+    "feature1Body": "Minima es una app sencilla que te ayuda a aumentar tu productividad.",
+    "feature2Title": "Notificaciones",
+    "feature2Body": "Recibe avisos cuando sea hora de hacer tus tareas.",
+    "feature3Title": "Diseño minimalista",
+    "feature3Body": "Disfruta de un diseño simple que te permite enfocarte solo en lo que tienes que hacer."
+  },
+  "notification": {
+    "title": "¡Es hora! ¡Tienes una tarea pendiente!"
+  }
+}
