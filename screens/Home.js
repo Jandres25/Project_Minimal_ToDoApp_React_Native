@@ -90,7 +90,7 @@ export default function Home() {
         <View style={styles.emptyState}>
           <Image
             source={require("../assets/nothingToday.png")}
-            style={styles.emptyImage}
+            style={[styles.emptyImage, { tintColor: colors.text }]}
           />
           <Text style={styles.emptyTitle}>CONGRATS!</Text>
           <Text style={styles.emptySubtitle}>You don't have any task, enjoy your day.</Text>
@@ -103,7 +103,7 @@ export default function Home() {
         <View style={styles.emptyState}>
           <Image
             source={require("../assets/nothingTomorrow.png")}
-            style={styles.emptyImage}
+            style={[styles.emptyImage, { tintColor: colors.text }]}
           />
           <Text style={styles.emptyTitle}>NICE!</Text>
           <Text style={styles.emptySubtitle}>Nothing is scheduled for tomorrow..</Text>
@@ -122,7 +122,7 @@ export default function Home() {
         </TouchableOpacity>
         <Image
           source={require("../assets/nothing.png")}
-          style={[styles.emptyImage, { width: 200, height: 200 }]}
+          style={[styles.emptyImage, { width: 200, height: 200, tintColor: colors.text }]}
         />
         <Text style={styles.emptyTitle}>NICE!</Text>
         <Text style={styles.emptySubtitle}>Nothing is scheduled.</Text>
