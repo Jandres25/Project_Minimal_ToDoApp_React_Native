@@ -1,4 +1,4 @@
-# Minimal To-Do App
+# Ticked
 
 A clean and minimal task management mobile application built with React Native and Expo.
 
@@ -109,6 +109,14 @@ Each task is stored as a JSON object in AsyncStorage under the key `"Todos"`:
 | `isToday`        | boolean | Whether the task was scheduled for today             |
 | `isCompleted`    | boolean | Completion state                                     |
 | `notificationId` | string? | Expo notification ID, present only when alert is set |
+
+## Build
+
+The app is distributed as a standalone APK via [EAS Build](https://docs.expo.dev/build/introduction/) (profile: `preview`). Each build increments `versionCode` in `app.json`. Run with:
+
+```bash
+eas build --platform android --profile preview
+```
 
 ## Architecture notes
 
