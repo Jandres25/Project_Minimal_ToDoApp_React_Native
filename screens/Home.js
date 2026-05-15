@@ -156,13 +156,14 @@ const makeStyles = (colors) =>
     },
     headerRow: {
       flexDirection: "row",
-      alignItems: "center",
       justifyContent: "space-between",
+      alignItems: "flex-start",
     },
     headerActions: {
       flexDirection: "row",
       alignItems: "center",
       gap: 12,
+      marginTop: 20,
     },
     hideBtn: {},
     emptyState: {

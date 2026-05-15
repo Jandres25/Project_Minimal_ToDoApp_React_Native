@@ -27,13 +27,13 @@ function Todo({ id, text, isCompleted, hour, notificationId }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 8 }}>
         <Checkbox
           id={id}
           isCompleted={isCompleted}
           isToday={thisTodoIsToday}
         />
-        <View>
+        <View style={{ flex: 1 }}>
           <Text
             selectable
             style={
